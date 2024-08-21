@@ -24,10 +24,10 @@ dotenv.config();
 async function init() {
     try{
         const mysqli = mysql.createPool({
-            host: "localhost",
-            user: "root",
-            password: "",
-            database: "bd_test",
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME,
         });
 
         app.post('/cadastro', async (req, res) => {
