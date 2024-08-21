@@ -7,6 +7,7 @@ app.use(express.static('public'));
 app.use(cookieParser()); 
 
 app.post('/cadastro',  (req, res) => {
+      res.send("ola");
     console.log("deu certo");
 });
 
