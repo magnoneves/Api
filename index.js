@@ -7,4 +7,8 @@ app.use(cookieParser());
 
 app.post('/cadastro',  (req, res) => {
     console.log("deu certo");
+});
+
+app.listen(3000, () => {
+    console.log("concetou com sucesso");
 })
