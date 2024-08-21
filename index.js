@@ -73,9 +73,6 @@ async function init() {
 
 init();
 
-      res.send("ola");
-    console.log("deu certo");
-});
 
 app.listen(3000, () => {
     console.log("O servidor esta rodando na porta 3000");
