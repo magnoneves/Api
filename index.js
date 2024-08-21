@@ -8,7 +8,6 @@ import { fileURLToPath } from 'url';
 
 
 const app = express();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -19,10 +18,11 @@ app.use(express.static('public'));
 app.use(cookieParser()); 
 app.set('views', path.join(__dirname, 'public'));
 
+// Carregar variáveis de ambiente
 dotenv.config();
 
 async function init() {
-    try{
+    try {
         const mysqli = mysql.createPool({
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
@@ -30,46 +30,49 @@ async function init() {
             database: process.env.DB_NAME,
         });
 
+        // Rota para cadastro
         app.post('/cadastro', async (req, res) => {
-            const {nome, email, senha} = req.body;
-            try{
+            const { nome, email, senha } = req.body;
+            try {
                 const [results] = await mysqli.execute('INSERT INTO usuario(nome, email, senha) VALUES (?, ?, ?)', [nome, email, senha]);
                 console.log("Inserção feita com sucesso");
-                res.redirect("/login.html")
+                res.redirect("/login.html");
+            } catch (err) {
+                console.log("Deu erro ao fazer a inserção", err);
+                res.status(500).send("Erro ao inserir dados.");
             }
-            catch(err){
-                console.log("deu erro ao fazer a inserção", err)
-            }
-        })
+        });
+
+     
         app.post('/login', async (req, res) => {
-            const {email, senha} = req.body;
-            try{
+            const { email, senha } = req.body;
+            try {
                 const [rows] = await mysqli.execute('SELECT * FROM usuario WHERE email = ? AND senha = ?', [email, senha]);
-                if(rows.length > 0) {
-                    console.log("login bem sucedido")
-                    console.log(email)
-                    res.render('main.mustache', { email: email }); 
-                   
+                if (rows.length > 0) {
+                    console.log("Login bem sucedido");
+                    res.render('main.mustache', { email: email });
+                } else {
+                    console.log("A senha ou email está errado");
+                    res.status(401).send("Email ou senha inválidos.");
                 }
-                else{
-                    console.log("A senha ou email esta errado")
-                }
+            } catch (err) {
+                console.log("Deu erro ao fazer login", err);
+                res.status(500).send("Erro ao fazer login.");
             }
-            catch(err){
-                console.log("deu erro ao fazer login")
-            }
-        })
+        });
 
-
+     
+        app.listen(3000, () => {
+            console.log("O servidor está rodando na porta 3000");
+        });
+        
+    } catch (err) {
+        console.log("Deu erro ao tentar conectar ao banco de dados", err);
     }
-    catch(err){
-        console.log("deu erro ao tentar conectar ao banco de dados", err)
-    }
-};
+}
 
 init();
 
-app.post('/cadastro',  (req, res) => {
       res.send("ola");
     console.log("deu certo");
 });
