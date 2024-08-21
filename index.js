@@ -81,6 +81,3 @@ console.log('Host:', 'roundhouse.proxy.rlwy.net');
 console.log('User:', 'root');
 console.log('Database:', 'railway');
 console.log('Port:', 48116);
-
-    console.log("concetou com sucesso");
-})
